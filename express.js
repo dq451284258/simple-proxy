@@ -1,6 +1,15 @@
-let express = require('express')
-let app = express()
+var express = require('express');
+var proxy = require('http-proxy-middleware');
+var app = express();
 
-app.get('/', (req, res) => res.send('hello world'))
+app.use(express.static('./public'));
+ 
+app.use('/api', proxy({ 
+    target: 'http://edupro.tfsitest.com',
+    changeOrigin: true,
+    pathRewrite:{
+      "^/api":"/"
+    }
+}));
 
-app.listen(3000, () => console.log('you are now in http://localhost:3000'))
+app.listen(8000, () => console.log('you are listening on http://localhost:8000/account.html'));
